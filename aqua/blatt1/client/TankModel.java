@@ -1,5 +1,6 @@
 package aqua.blatt1.client;
 
+import java.net.InetSocketAddress;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Observable;
@@ -18,6 +19,8 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 	protected static final int MAX_FISHIES = 5;
 	protected static final Random rand = new Random();
 	protected volatile String id;
+	protected volatile InetSocketAddress leftNeighbor;
+	protected volatile InetSocketAddress rightNeighbor;
 	protected final Set<FishModel> fishies;
 	protected int fishCounter = 0;
 	protected final ClientCommunicator.ClientForwarder forwarder;
@@ -30,6 +33,13 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 	synchronized void onRegistration(String id) {
 		this.id = id;
 		newFish(WIDTH - FishModel.getXSize(), rand.nextInt(HEIGHT - FishModel.getYSize()));
+	}
+
+	synchronized void onNeighborUpdate(InetSocketAddress leftNeighbor, InetSocketAddress rightNeighbor) {
+		if (leftNeighbor != null)
+            this.leftNeighbor = leftNeighbor;
+        if (rightNeighbor != null)
+            this.rightNeighbor = rightNeighbor;
 	}
 
 	public synchronized void newFish(int x, int y) {
@@ -53,6 +63,14 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 		return id;
 	}
 
+	public InetSocketAddress getLeftNeighbor() {
+		return leftNeighbor;
+	}
+
+	public InetSocketAddress getRightNeighbor() {
+		return rightNeighbor;
+	}
+
 	public synchronized int getFishCounter() {
 		return fishCounter;
 	}
@@ -68,7 +86,7 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 			fish.update();
 
 			if (fish.hitsEdge())
-				forwarder.handOff(fish);
+				forwarder.handOff(fish, this);
 
 			if (fish.disappears())
 				it.remove();

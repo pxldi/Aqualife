@@ -38,8 +38,15 @@ public class Broker {
             lock.writeLock().lock();
             clients.add(clientId, sender);
             lock.writeLock().unlock();
+
+            int clientIndex = clients.indexOf(clientId);
+            InetSocketAddress leftNeighbor = clients.getLeftNeighborOf(clientIndex);
+            InetSocketAddress rightNeighbor = clients.getRightNeighborOf(clientIndex);
+            
+            endpoint.send(sender, new NeighborUpdate(clientId, leftNeighbor, rightNeighbor));
+            endpoint.send(leftNeighbor, new NeighborUpdate("left", clients.getLeftNeighborOf(clients.indexOf(leftNeighbor)), sender));
+            endpoint.send(rightNeighbor, new NeighborUpdate("right", sender, clients.getRightNeighborOf(clients.indexOf(rightNeighbor))));
             endpoint.send(sender, new RegisterResponse(clientId));
-            System.out.println("Client " + clientId + " registered");
         }
 
         private void deregister(Message message) {
@@ -49,10 +56,15 @@ public class Broker {
             int clientIndex = clients.indexOf(clientId);
             lock.readLock().unlock();
 
+            InetSocketAddress leftNeighbor = clients.getLeftNeighborOf(clientIndex);
+            InetSocketAddress rightNeighbor = clients.getRightNeighborOf(clientIndex);
+
             lock.writeLock().lock();
             clients.remove(clientIndex);
             lock.writeLock().unlock();
-            System.out.println("Client " + clientId + " deregistered");
+            
+            endpoint.send(leftNeighbor, new NeighborUpdate("left", null, rightNeighbor));
+            endpoint.send(rightNeighbor, new NeighborUpdate("right", leftNeighbor, null));
         }
 
         private void handOff(Message message) {
