@@ -21,12 +21,12 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 	protected volatile String id;
 	protected volatile InetSocketAddress leftNeighbor;
 	protected volatile InetSocketAddress rightNeighbor;
-	protected final Set<FishModel> fishies;
+	protected final Set<FishModel> fishes;
 	protected int fishCounter = 0;
 	protected final ClientCommunicator.ClientForwarder forwarder;
 
 	public TankModel(ClientCommunicator.ClientForwarder forwarder) {
-		this.fishies = Collections.newSetFromMap(new ConcurrentHashMap<FishModel, Boolean>());
+		this.fishes = Collections.newSetFromMap(new ConcurrentHashMap<>());
 		this.forwarder = forwarder;
 	}
 
@@ -43,20 +43,20 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 	}
 
 	public synchronized void newFish(int x, int y) {
-		if (fishies.size() < MAX_FISHIES) {
-			x = x > WIDTH - FishModel.getXSize() - 1 ? WIDTH - FishModel.getXSize() - 1 : x;
-			y = y > HEIGHT - FishModel.getYSize() ? HEIGHT - FishModel.getYSize() : y;
+		if (fishes.size() < MAX_FISHIES) {
+			x = Math.min(x, WIDTH - FishModel.getXSize() - 1);
+			y = Math.min(y, HEIGHT - FishModel.getYSize());
 
 			FishModel fish = new FishModel("fish" + (++fishCounter) + "@" + getId(), x, y,
 					rand.nextBoolean() ? Direction.LEFT : Direction.RIGHT);
 
-			fishies.add(fish);
+			fishes.add(fish);
 		}
 	}
 
 	synchronized void receiveFish(FishModel fish) {
 		fish.setToStart();
-		fishies.add(fish);
+		fishes.add(fish);
 	}
 
 	public String getId() {
@@ -76,7 +76,7 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 	}
 
 	public synchronized Iterator<FishModel> iterator() {
-		return fishies.iterator();
+		return fishes.iterator();
 	}
 
 	private synchronized void updateFishies() {
