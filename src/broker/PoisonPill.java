@@ -6,7 +6,7 @@
  * Wird den Studenten vorgegeben.
  * 
  */
-package aqua.src.broker;
+package broker;
 
 import java.io.Serializable;
 

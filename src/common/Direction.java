@@ -1,4 +1,4 @@
-package aqua.src.common;
+package common;
 
 public enum Direction {
 	LEFT(-1), RIGHT(+1);

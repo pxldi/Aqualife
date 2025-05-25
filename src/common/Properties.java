@@ -1,4 +1,4 @@
-package aqua.src.common;
+package common;
 
 public class Properties {
 	public final static String HOST = "localhost";

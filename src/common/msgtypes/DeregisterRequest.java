@@ -1,4 +1,4 @@
-package aqua.src.common.msgtypes;
+package common.msgtypes;
 
 import java.io.Serializable;
 

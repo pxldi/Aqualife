@@ -1,4 +1,4 @@
-package aqua.src.client;
+package client;
 
 import javax.swing.SwingUtilities;
 

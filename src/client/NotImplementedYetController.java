@@ -1,4 +1,4 @@
-package aqua.src.client;
+package client;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;

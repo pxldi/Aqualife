@@ -1,4 +1,4 @@
-package aqua.src.broker;
+package broker;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
@@ -8,9 +8,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import aqua.src.common.Direction;
-import aqua.src.common.FishModel;
-import aqua.src.common.msgtypes.*;
+import common.Direction;
+import common.FishModel;
+import common.msgtypes.*;
 import messaging.Endpoint;
 import messaging.Message;
 import java.awt.Window;

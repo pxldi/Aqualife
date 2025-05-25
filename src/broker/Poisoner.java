@@ -1,11 +1,11 @@
-package aqua.src.broker;
+package broker;
 
 import java.net.InetSocketAddress;
 
 import javax.swing.JOptionPane;
 
 import messaging.Endpoint;
-import aqua.src.common.Properties;
+import common.Properties;
 
 public class Poisoner {
 	private final Endpoint endpoint;

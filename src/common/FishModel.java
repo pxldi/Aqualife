@@ -1,9 +1,9 @@
-package aqua.src.common;
+package common;
 
 import java.io.Serializable;
 import java.util.Random;
 
-import aqua.src.client.TankModel;
+import client.TankModel;
 
 @SuppressWarnings("serial")
 public final class FishModel implements Serializable {
