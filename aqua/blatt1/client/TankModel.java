@@ -1,11 +1,7 @@
 package aqua.blatt1.client;
 
 import java.net.InetSocketAddress;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Observable;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -24,6 +20,9 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 	protected final Set<FishModel> fishes;
 	protected int fishCounter = 0;
 	protected final ClientCommunicator.ClientForwarder forwarder;
+
+	public boolean hasToken = false;
+	public Timer timer = new Timer();
 
 	public TankModel(ClientCommunicator.ClientForwarder forwarder) {
 		this.fishes = Collections.newSetFromMap(new ConcurrentHashMap<>());
@@ -59,6 +58,22 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 		fishes.add(fish);
 	}
 
+	public void receiveToken() {
+		hasToken = true;
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				InetSocketAddress address = leftNeighbor;
+				forwarder.handoffToken(address);
+				hasToken = false;
+			}
+		}, 2000);
+	}
+
+	public boolean hasToken() {
+		return hasToken;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -79,14 +94,19 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 		return fishes.iterator();
 	}
 
-	private synchronized void updateFishies() {
+	private synchronized void updateFishes() {
 		for (Iterator<FishModel> it = iterator(); it.hasNext();) {
 			FishModel fish = it.next();
 
 			fish.update();
 
-			if (fish.hitsEdge())
-				forwarder.handOff(fish, this);
+			if (fish.hitsEdge()) {
+                if (this.hasToken()) {
+                    forwarder.handOff(fish, this);
+                } else {
+                    fish.reverse();
+                }
+            }
 
 			if (fish.disappears())
 				it.remove();
@@ -94,7 +114,7 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 	}
 
 	private synchronized void update() {
-		updateFishies();
+		updateFishes();
 		setChanged();
 		notifyObservers();
 	}
