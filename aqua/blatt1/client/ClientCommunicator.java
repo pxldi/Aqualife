@@ -62,9 +62,8 @@ public class ClientCommunicator {
 				if (msg.getPayload() instanceof HandoffRequest)
 					tankModel.receiveFish(((HandoffRequest) msg.getPayload()).getFish());
 
-				if (msg.getPayload() instanceof NeighborUpdate) {
-					NeighborUpdate neighborUpdate = (NeighborUpdate) msg.getPayload();
-					tankModel.onNeighborUpdate(neighborUpdate.getLeft(), neighborUpdate.getRight());
+				if (msg.getPayload() instanceof NeighborUpdate neighborUpdate) {
+                    tankModel.onNeighborUpdate(neighborUpdate.getLeft(), neighborUpdate.getRight());
 				}
 			}
 			System.out.println("Receiver stopped.");
