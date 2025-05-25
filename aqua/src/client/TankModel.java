@@ -1,12 +1,12 @@
-package aqua.blatt1.client;
+package aqua.src.client;
 
 import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-import aqua.blatt1.common.Direction;
-import aqua.blatt1.common.FishModel;
+import aqua.src.common.Direction;
+import aqua.src.common.FishModel;
 
 public class TankModel extends Observable implements Iterable<FishModel> {
 

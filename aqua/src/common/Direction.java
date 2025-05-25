@@ -1,4 +1,4 @@
-package aqua.blatt1.common;
+package aqua.src.common;
 
 public enum Direction {
 	LEFT(-1), RIGHT(+1);
