@@ -2,16 +2,11 @@ package aqua.blatt1.client;
 
 import java.net.InetSocketAddress;
 
+import aqua.blatt1.common.msgtypes.*;
 import messaging.Endpoint;
 import messaging.Message;
-import aqua.blatt1.common.Direction;
 import aqua.blatt1.common.FishModel;
 import aqua.blatt1.common.Properties;
-import aqua.blatt1.common.msgtypes.DeregisterRequest;
-import aqua.blatt1.common.msgtypes.HandoffRequest;
-import aqua.blatt1.common.msgtypes.NeighborUpdate;
-import aqua.blatt1.common.msgtypes.RegisterRequest;
-import aqua.blatt1.common.msgtypes.RegisterResponse;
 
 public class ClientCommunicator {
 	private final Endpoint endpoint;
@@ -36,11 +31,11 @@ public class ClientCommunicator {
 		}
 
 		public void handOff(FishModel fish, TankModel tankModel) {
-			if (fish.getDirection() == Direction.LEFT) {
-				endpoint.send(tankModel.getLeftNeighbor(), new HandoffRequest(fish));
-			} else {
-				endpoint.send(tankModel.getRightNeighbor(), new HandoffRequest(fish));
-			}
+			endpoint.send(tankModel.getLeftNeighbor(), new HandoffRequest(fish));
+		}
+
+		public void handoffToken(InetSocketAddress address) {
+			endpoint.send(address, new Token());
 		}
 	}
 
@@ -62,9 +57,12 @@ public class ClientCommunicator {
 				if (msg.getPayload() instanceof HandoffRequest)
 					tankModel.receiveFish(((HandoffRequest) msg.getPayload()).getFish());
 
-				if (msg.getPayload() instanceof NeighborUpdate) {
-					NeighborUpdate neighborUpdate = (NeighborUpdate) msg.getPayload();
-					tankModel.onNeighborUpdate(neighborUpdate.getLeft(), neighborUpdate.getRight());
+				if (msg.getPayload() instanceof NeighborUpdate neighborUpdate) {
+                    tankModel.onNeighborUpdate(neighborUpdate.getLeft(), neighborUpdate.getRight());
+				}
+
+				if (msg.getPayload() instanceof Token) {
+					tankModel.receiveToken();
 				}
 			}
 			System.out.println("Receiver stopped.");
