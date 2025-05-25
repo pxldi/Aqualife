@@ -1,9 +1,6 @@
 package aqua.blatt1.client;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Observable;
@@ -44,8 +41,25 @@ public class TankView extends JPanel implements Observer {
 
 	@SuppressWarnings("unused")
 	private void drawBorders(Graphics2D g2d) {
+		var originalStroke = g2d.getStroke();
+		var originalColor = g2d.getColor();
+
+		// Draw a thicker green line
+		g2d.setStroke(new BasicStroke(4));
+		g2d.setColor(new Color(0, 180, 0)); // bright green
+
 		g2d.drawLine(0, 0, 0, TankModel.HEIGHT);
 		g2d.drawLine(TankModel.WIDTH - 1, 0, TankModel.WIDTH - 1, TankModel.HEIGHT);
+
+		// Optional: draw a lighter green glow by drawing a thicker, semi-transparent line underneath
+		g2d.setStroke(new BasicStroke(8));
+		g2d.setColor(new Color(0, 255, 0, 80)); // translucent bright green
+		g2d.drawLine(0, 0, 0, TankModel.HEIGHT);
+		g2d.drawLine(TankModel.WIDTH - 1, 0, TankModel.WIDTH - 1, TankModel.HEIGHT);
+
+		// Restore original settings
+		g2d.setStroke(originalStroke);
+		g2d.setColor(originalColor);
 	}
 
 	private void doDrawing(Graphics g) {

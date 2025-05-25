@@ -22,6 +22,7 @@ public class Broker {
     private ExecutorService executor = Executors.newFixedThreadPool(8);
     private volatile boolean stopRequested = false;
     private JFrame frame;
+    private boolean tokenInitialized = false;
 
     private class BrokerTask implements Runnable{
         private ReentrantReadWriteLock lock;
@@ -47,6 +48,8 @@ public class Broker {
             endpoint.send(leftNeighbor, new NeighborUpdate("left", clients.getLeftNeighborOf(clients.indexOf(leftNeighbor)), sender));
             endpoint.send(rightNeighbor, new NeighborUpdate("right", sender, clients.getRightNeighborOf(clients.indexOf(rightNeighbor))));
             endpoint.send(sender, new RegisterResponse(clientId));
+            if (!tokenInitialized)
+                endpoint.send(sender, new Token());
         }
 
         private void deregister(Message message) {
