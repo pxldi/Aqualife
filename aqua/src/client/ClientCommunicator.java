@@ -1,12 +1,12 @@
-package aqua.blatt1.client;
+package aqua.src.client;
 
 import java.net.InetSocketAddress;
 
-import aqua.blatt1.common.msgtypes.*;
+import aqua.src.common.msgtypes.*;
 import messaging.Endpoint;
 import messaging.Message;
-import aqua.blatt1.common.FishModel;
-import aqua.blatt1.common.Properties;
+import aqua.src.common.FishModel;
+import aqua.src.common.Properties;
 
 public class ClientCommunicator {
 	private final Endpoint endpoint;

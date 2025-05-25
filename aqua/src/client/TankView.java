@@ -1,4 +1,4 @@
-package aqua.blatt1.client;
+package aqua.src.client;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -9,7 +9,7 @@ import java.util.Observer;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import aqua.blatt1.common.FishModel;
+import aqua.src.common.FishModel;
 
 @SuppressWarnings("serial")
 public class TankView extends JPanel implements Observer {

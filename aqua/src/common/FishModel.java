@@ -1,9 +1,9 @@
-package aqua.blatt1.common;
+package aqua.src.common;
 
 import java.io.Serializable;
 import java.util.Random;
 
-import aqua.blatt1.client.TankModel;
+import aqua.src.client.TankModel;
 
 @SuppressWarnings("serial")
 public final class FishModel implements Serializable {
